@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
-function App() {
+const Workers = () => {
+  const [workers, setWorkers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetch('https://5ea5ca472d86f00016b4626d.mockapi.io/brotherhood')
+      .then(response => response.json())
+      .then(data => setWorkers(data))
+  }, []);
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  
+  const searchWorkers = workers.filter(worker =>
+    worker.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+        <label>Axtarış:
+          <input type="text" value={searchTerm} onChange={handleSearch} />
+        </label>
+      </div>
+      <ul>
+        {searchWorkers.map(worker => (
+          <li key={worker.id}>
+            {worker.name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
-export default App;
+export default Workers;
